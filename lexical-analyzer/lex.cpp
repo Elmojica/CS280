@@ -201,19 +201,15 @@ LexItem getNextToken(istream& inf , int& linenumber){
 
 
       case INSTRING:
-       
-          if(ch == '"'){
-          lexstate = START; 
-          return LexItem(SCONST, lexeme, linenumber);
-          }else {
-            
-              if(inf.peek() == EOF || inf.peek() == '\n')
-                  return LexItem(ERR, lexeme, linenumber);
-           lexeme += ch;
+            lexeme += ch;
+            if(ch == '"'){
+                return LexItem(SCONST, lexeme, linenumber);
+            }else {
+                if(inf.peek() == EOF || inf.peek() == '\n'){
+                    return LexItem(ERR, lexeme, linenumber);
+                }
               
             continue;
-              
-          
         }
                                               
         break;
