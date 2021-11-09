@@ -11,8 +11,6 @@ using namespace std;
 
 #include "lex.h"
 
-
-
 extern bool Prog(istream& in, int& line);
 extern bool StmtList(istream& in, int& line);
 extern bool Stmt(istream& in, int& line);
