@@ -62,9 +62,6 @@ bool DeclStmt(istream& in, int& line) {
             ParseError(line, "Incorrect variable in Declaration Statement.");
             return status;
         }
-
-
-
     }else{
 		Parser::PushBackToken(t);
 		ParseError(line, "Incorrect Type.");
@@ -121,27 +118,53 @@ bool WriteStmt(istream& in, int& line) {
 
 
 bool Prog(istream& in, int& line){
-    bool parse = true;
+    bool parse = false;
 
     LexItem t = Parser::GetNexToken(in,line);
-    if(t.GetToken() == PROGRAM)
+    if(t.GetToken() == PROGRAM){
         t = Parser::GetNexToken(in,line);
         if(t.GetToken() == IDENT){
+            parse = StmtList(in, line);
+            //not sure if something else goes here
+            //check if there is "END PROGRAM"
+            LexItem done = Parser::GetNextToken(in,line);
+            if(done.GetToken()== END){
+                done = Parser::GetNextToken(in,line);
+                if(done.GetToken()== PROGRAM){
+                    return parse;
+                }else{
+                    parse = false;
+                    ParseError(line, "Missing PROGRAM at the End");
+                }
+            }else{
+                parse = false;
+                ParseError(line, "Missing END at end of program.");
 
+            }
 
         }else{
-
+            ParseError(line, "Missing Program Name.");
         }
     }else{
-
+        ParseError(line, "Missing PROGRAM");
     }
 
-
-
+    return parse;
 }
 
 bool StmtList(istream& in, int& line){
+/*
+ ParseTree *s = Stmt(in, line);
+	if( s == 0 )
+		return 0;
 
+     if ( (Parser::GetNextToken(in, line)) != SC)
+    {
+        ParseError(line, "Missing Semi Colon");
+         return 0;
+    }
+
+	return new StmtList(s, Slist(in,line));*/
 }
 
 bool ControlStmt(istream& in, int& line){
@@ -149,7 +172,35 @@ bool ControlStmt(istream& in, int& line){
 }
 
 bool IfStmt(istream& in, int& line){
-
+/*
+ParseTree *exp = Expr(in, line);
+	if( exp == 0 ) {
+		ParseError(line, "Missing ID");
+		return 0;
+	}
+    if(exp->IsIdent() && id.count(exp->GetId()) == 0)
+    {
+        cout << "UNDECLARED VARIABLE " << exp->GetId() << endl;
+    }
+    Lex b = Parser::GetNextToken(in, line);
+    if (b != BEGIN)
+    {
+        ParseError(line, "Missing BEGIN");
+        return 0;
+    }
+    ParseTree *stringList = Slist(in, line);
+	if( stringList == 0 ) {
+		ParseError(line, "Missing BEGIN");
+		return 0;
+	}
+    Lex end = Parser::GetNextToken(in, line);
+    if (end != END)
+    {
+        ParseError(line, "Missing END");
+        return 0;
+    }
+    return new If(exp,b,stringList,end);
+*/
 }
 
 bool IdentList(istream& in, int& line, LexItem tok){
@@ -177,7 +228,30 @@ bool LogicExpr(istream& in, int& line){
 }
 
 bool Expr(istream& in, int& line){
+/*ParseTree *t1 = Prod(in, line);
+	if( t1 == 0 ) {
+		return 0;
+	}
 
+	while ( true ) {
+		Lex t = Parser::GetNextToken(in, line);
+
+		if( t != PLUS && t != MINUS ) {
+			Parser::PushBackToken(t);
+			return t1;
+		}
+
+		ParseTree *t2 = Prod(in, line);
+		if( t2 == 0 ) {
+			ParseError(line, "Missing expression");
+			return 0;
+		}
+
+		if( t == PLUS )
+			t1 = new PlusExpr(t.GetLinenum(), t1, t2);
+		else
+			t1 = new MinusExpr(t.GetLinenum(), t1, t2);
+	}*/
 }
 
 bool Term(istream& in, int& line){
