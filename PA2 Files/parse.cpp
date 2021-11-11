@@ -285,11 +285,35 @@ bool IdentList(istream& in, int& line, LexItem tok){
 }
 
 bool Var(istream& in, int& line){
+    bool status = true;
 
+    LexItem t = Parser::GetNextToken(in,line);
+
+    if(t.GetToken()== IDENT){
+        status = IdentList(in,line,t);
+    } else{
+        ParseError(line, "missing ident token");
+        Parser::PushBackToken(t);
+        return false;
+    }
+
+    return status;
 }
 
 bool AssignStmt(istream& in, int& line){
+    bool var = Var(in, line);
+    bool expr = false;
+    LexItem t = Parser::GetNextToken(in,line);
 
+    if(t.GetToken() == ASSOP){
+        expr= Expr(in, line);
+    }
+
+
+    if(var && expr){
+        return true;
+    }
+    return false;
 }
 
 bool ExprList(istream& in, int& line){
@@ -328,15 +352,74 @@ bool Expr(istream& in, int& line){
 }
 
 bool Term(istream& in, int& line){
+    bool status = SFactor(in,line);
 
+    LexItem temp = Parser::GetNextToken(in,line);
+
+    switch(temp.GetToken()){
+        case MULT:
+            //call SFactor again
+            break;
+        case DIV:
+            //call SFactor again
+            break;
+        case REM:
+            //call SFactor again
+            break;
+        default:
+            ParseError(line, "theres no operator")
+            break;
+    }
+
+
+    return status;
 }
 
 bool SFactor(istream& in, int& line){
+    bool status = true;
+    LexItem temp = Parser::GetNextToken(in,line);
+
+    if(temp.GetToken()==PLUS){
+        status = Factor(in,line, 1);
+    } else if(temp.GetToken()==MINUS){
+        status = Factor(in,line, -1);
+    } else {
+        status = Factor(in,line, 1);
+    }
+
+    return status;
 
 }
 
 bool Factor(istream& in, int& line, int sign){
+    bool status = true;
 
+    LexItem t = Parser::GetNextToken(in,line);
+
+    switch (t.GetToken()){
+        case IDENT:
+
+            break;
+        case ICONST:
+
+            break;
+        case RCONST:
+
+            break;
+        case SCONST:
+
+            break;
+        case LPAREN:
+
+            break;
+        default:
+            status = Expr(in, line);
+            if(Parser::GetNextToken(in,line) == RPAREN){
+
+            }
+            break;
+    }
+    return status;
 }
 
 
