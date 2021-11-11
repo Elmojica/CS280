@@ -205,7 +205,7 @@ ParseTree *exp = Expr(in, line);
 
 bool IdentList(istream& in, int& line, LexItem tok){
     bool x = true;
-    if(defVar.find(tok.GetLexeme())!= m.end()){
+    if(defVar.find(tok.GetLexeme())!= defVar.end()){
        x = false;
     }
     return x;
