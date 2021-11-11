@@ -115,8 +115,6 @@ bool WriteStmt(istream& in, int& line) {
 	return ex;
 }
 
-
-
 bool Prog(istream& in, int& line){
     bool parse = false;
 
@@ -125,8 +123,10 @@ bool Prog(istream& in, int& line){
         t = Parser::GetNexToken(in,line);
         if(t.GetToken() == IDENT){
             parse = StmtList(in, line);
-            //not sure if something else goes here
-            //check if there is "END PROGRAM"
+            if(!parse){
+                ParseError(line,"Incorrect Syntax in the Program ");
+                return parse;
+            }
             LexItem done = Parser::GetNextToken(in,line);
             if(done.GetToken()== END){
                 done = Parser::GetNextToken(in,line);
@@ -139,36 +139,86 @@ bool Prog(istream& in, int& line){
             }else{
                 parse = false;
                 ParseError(line, "Missing END at end of program.");
-
             }
-
         }else{
             ParseError(line, "Missing Program Name.");
         }
     }else{
-        ParseError(line, "Missing PROGRAM");
+        ParseError(line, "Missing PROGRAM.");
     }
 
     return parse;
 }
 
 bool StmtList(istream& in, int& line){
-/*
- ParseTree *s = Stmt(in, line);
-	if( s == 0 )
-		return 0;
+    bool stmt = Stmt(in,line);
+    LexItem t = Parser::GetNextToken(in, line);
 
-     if ( (Parser::GetNextToken(in, line)) != SC)
-    {
-        ParseError(line, "Missing Semi Colon");
-         return 0;
+    if(t.GetToken() != SEMICOL){
+        ParseError(line, "Missing a semicolon.");//FIGURE OUT: how you can get here in prog2 error case
+        return stmt;
     }
 
-	return new StmtList(s, Slist(in,line));*/
+    if(!stmt){
+        return stmt;
+    }
+
+
+
+
+
+
+    //CHECK THIS CODE
+
+    LexItem temp = Parser::GetNextToken(in,line)
+    if(temp.GetToken() == DONE){
+        Parser::PushBackToken(temp);
+        return stmt;
+    } else{
+        Parser::PushBackToken(temp);
+        stmt = new StmtList(in,line); // no idea if this logic works AT ALL
+    }
+
+    return stmt;
 }
 
 bool ControlStmt(istream& in, int& line){
+    bool status = true;
 
+    LexItem t = Parser::GetNextToken(in,line);
+
+    switch(t.GetToken()){
+        case IF:
+            status = IfStmt(in,line);
+
+            if(!status){
+                ParseError(line,"Incorrect control Statement.");//double check this error msg
+                return status;
+            }
+            break;
+
+        case WRITE:
+            status = WriteStmt(in,line);
+            if(!status){
+                ParseError(line,"Incorrect control Statement.");//double check this error msg
+                return status;
+            }
+            break;
+
+        case IDENT:
+            status = AssignStmt(in, line);
+            if(!status){
+                ParseError(line,"Incorrect control Statement.");//double check this error msg
+                return status;
+            }
+            break;
+
+        default:
+            Parser::PushBackToken(t);//idk if i call an error here
+            ParseError(line, "Incorrect control Statement.");//double check this error msg
+    }
+
+    return status;
 }
 
 bool IfStmt(istream& in, int& line){
@@ -201,13 +251,36 @@ ParseTree *exp = Expr(in, line);
     }
     return new If(exp,b,stringList,end);
 */
+
+
+
+
 }
 
 bool IdentList(istream& in, int& line, LexItem tok){
     bool x = true;
-    if(defVar.find(tok.GetLexeme())!= defVar.end()){
-       x = false;
+    LexItem temp = Parser::GetNextToken(in, line);
+    //if the ident isnt found
+    if(defVar.find(tok.GetLexeme()) == defVar.end()){
+        defVar.insert({tok.GetLexeme(), true});//then add it to the maps
+        SymTable.insert({tok.GetLexeme(), tok.GetToken()});
+    } else {//if the ident IS FOUND
+        defVar[tok.GetLexeme()] = false; // due to the logic
+        Parser::PushBackToken(tok);//pushes back the error var
+        ParseError(line, "Variable Redefinition");//variable defined for the 2nd time
+        return false;//so you can return le error
     }
+
+    if(temp.GetToken() == SEMICOL){
+        Parser::PushBackToken(temp);
+        return x;
+    } else if (temp.GetToken() == COMMA){
+        temp = Parser::GetNextToken(in, line);
+        x = IdentList(in, line, temp);
+    } else if(temp.GetToken() == IDENT){//idk being extra and double checking it
+        x = IdentList(in, line, temp);
+    }
+
     return x;
 }
 

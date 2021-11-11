@@ -1,7 +1,7 @@
-10: Variable Redefinition
-10: Incorrect variable in Declaration Statement.
-10: Incorrect Declaration Statement.
-10: Missing a semicolon.
-10: Incorrect Syntax in the Program
+10: Variable Redefinition                        {IdentList}
+10: Incorrect variable in Declaration Statement. {DeclStmt}
+10: Incorrect Declaration Statement.             {Stmt}
+10: Missing a semicolon.                         {StmtList} [how do i get this error message to get triggered?]
+10: Incorrect Syntax in the Program              {Prog}
 Unsuccessful Parsing
 Number of Syntax Errors 5
