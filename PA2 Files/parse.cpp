@@ -168,7 +168,7 @@ bool StmtList(istream& in, int& line){
 
 
 
-    //CHECK THIS CODE
+    //CHECK THIS CODE BELOW
 
     LexItem temp = Parser::GetNextToken(in,line)
     if(temp.GetToken() == DONE){
@@ -220,7 +220,9 @@ bool ControlStmt(istream& in, int& line){
 
     return status;
 }
-
+/*
+ * IfStmt function is not finished
+ */
 bool IfStmt(istream& in, int& line){
 /*
 ParseTree *exp = Expr(in, line);
@@ -316,14 +318,24 @@ bool AssignStmt(istream& in, int& line){
     return false;
 }
 
+/*
+ * ExprList function is not finished
+ */
+
 bool ExprList(istream& in, int& line){
 
 }
 
+/*
+ * LogicExpr function is not finished
+ */
+
 bool LogicExpr(istream& in, int& line){
 
 }
-
+/*
+ * Expr function is not finished
+ */
 bool Expr(istream& in, int& line){
 /*ParseTree *t1 = Prod(in, line);
 	if( t1 == 0 ) {
@@ -390,6 +402,10 @@ bool SFactor(istream& in, int& line){
     return status;
 
 }
+
+/*
+ * Factor function is not finished
+ */
 
 bool Factor(istream& in, int& line, int sign){
     bool status = true;
