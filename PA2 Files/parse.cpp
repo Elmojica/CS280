@@ -253,10 +253,24 @@ ParseTree *exp = Expr(in, line);
     }
     return new If(exp,b,stringList,end);
 */
+    //if token already
+    bool status = true;
+    LexItem t = Parser::GetNextToken(in, line);
 
-
-
-
+    if( t.GetToken() == LPAREN ){
+        status = LogicExpr(in,line);
+        if(!status){
+            if (t.GetToken() == RPAREN){
+                return status;
+            } else {
+                ParseError(line, "missing parentheses")
+                return false;
+            }
+        }
+    } else {
+        ParseError(line, "missing parentheses");
+        return false;
+    }
 }
 
 bool IdentList(istream& in, int& line, LexItem tok){
