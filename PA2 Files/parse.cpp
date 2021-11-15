@@ -13,25 +13,25 @@ map<string, bool> defVar;
 map<string, Token> SymTable;
 
 namespace Parser {
-	bool pushed_back = false;
-	LexItem	pushed_token;
+    bool pushed_back = false;
+    LexItem	pushed_token;
 
-	static LexItem GetNextToken(istream& in, int& line) {
-		if( pushed_back ) {
-			pushed_back = false;
-			return pushed_token;
-		}
-		return getNextToken(in, line);
-	}
+    static LexItem GetNextToken(istream& in, int& line) {
+        if( pushed_back ) {
+            pushed_back = false;
+            return pushed_token;
+        }
+        return GetNextToken(in, line);
+    }
 
-	static void PushBackToken(LexItem & t) {
-		if( pushed_back ) {
-			abort();
-		}
+    static void PushBackToken(LexItem & t) {
+        if( pushed_back ) {
+            abort();
+        }
 
-		pushed_back = true;
-		pushed_token = t;	
-	}
+        pushed_back = true;
+        pushed_token = t;
+    }
 
 }
 /* Global Variables  */
@@ -44,39 +44,39 @@ int ErrCount(){
 }
 
 void ParseError(int line, string msg){
-	++error_count;
-	cout << line << ": " << msg << endl;
+    ++error_count;
+    cout << line << ": " << msg << endl;
 }
 
-//Decl = Type IdentList 
+//Decl = Type IdentList
 //Type = INTEGER | REAL | CHAR
 bool DeclStmt(istream& in, int& line) {
-	bool status = false;
-	LexItem tok;
-	//cout << "in Decl" << endl;
-	LexItem t = Parser::GetNextToken(in, line);
-	
-	if(t == INT || t == FLOAT ) {
-		status = IdentList(in, line, t);
-		//cout<< "returning from IdentList" << " " << (status? 1: 0) << endl;
+    bool status = false;
+    LexItem tok;
+    //cout << "in Decl" << endl;
+    LexItem t = Parser::GetNextToken(in, line);
+
+    if(t == INT || t == FLOAT ) {
+        status = IdentList(in, line, t);
+        //cout<< "returning from IdentList" << " " << (status? 1: 0) << endl;
         if (!status){
             ParseError(line, "Incorrect variable in Declaration Statement.");
             return status;
         }
     }else{
-		Parser::PushBackToken(t);
-		ParseError(line, "Incorrect Type.");
-		return false;
-	}
-	return true;
+        Parser::PushBackToken(t);
+        ParseError(line, "Incorrect Type.");
+        return false;
+    }
+    return true;
 }
 
 bool Stmt(istream& in, int& line){
-	bool status=true;
-	//cout << "in Stmt" << endl;
-	LexItem t = Parser::GetNextToken(in, line);
-	
-	switch( t.GetToken() ) {
+    bool status=true;
+    //cout << "in Stmt" << endl;
+    LexItem t = Parser::GetNextToken(in, line);
+
+    switch( t.GetToken() ) {
         case INT: case FLOAT:
             Parser::PushBackToken(t);
             status = DeclStmt(in, line);
@@ -95,33 +95,33 @@ bool Stmt(istream& in, int& line){
             break;
         default:
             Parser::PushBackToken(t);
-	}
-	return status;
+    }
+    return status;
 }
 
-//WriteStmt:= wi, ExpreList 
+//WriteStmt:= wi, ExpreList
 bool WriteStmt(istream& in, int& line) {
-	LexItem t;
-	//cout << "in WriteStmt" << endl;
-		
-	bool ex = ExprList(in, line);
-	
-	if( !ex ) {
-		ParseError(line, "Missing expression after Write");
-		return false;
-	}
-	
-	//Evaluate: print out the list of expressions values
+    LexItem t;
+    //cout << "in WriteStmt" << endl;
 
-	return ex;
+    bool ex = ExprList(in, line);
+
+    if( !ex ) {
+        ParseError(line, "Missing expression after Write");
+
+    }
+
+    //Evaluate: print out the list of expressions values
+
+    return ex;
 }
 
 bool Prog(istream& in, int& line){
     bool parse = false;
 
-    LexItem t = Parser::GetNexToken(in,line);
+    LexItem t = Parser::GetNextToken(in,line);
     if(t.GetToken() == PROGRAM){
-        t = Parser::GetNexToken(in,line);
+        t = Parser::GetNextToken(in,line);
         if(t.GetToken() == IDENT){
             parse = StmtList(in, line);
             if(!parse){
@@ -166,13 +166,13 @@ bool StmtList(istream& in, int& line){
 
     //CHECK THIS CODE BELOW
 
-    LexItem temp = Parser::GetNextToken(in,line)
+    LexItem temp = Parser::GetNextToken(in,line);
     if(temp.GetToken() == DONE){
         Parser::PushBackToken(temp);
         return stmt;
     } else{
         Parser::PushBackToken(temp);
-        stmt = new StmtList(in,line); // no idea if this logic works AT ALL
+        stmt = StmtList(in,line); // no idea if this logic works AT ALL
     }
 
     return stmt;
@@ -219,27 +219,36 @@ bool ControlStmt(istream& in, int& line){
 /*
  * IfStmt function is not finished
  */
-bool IfStmt(istream& in, int& line){
+bool IfStmt(istream& in, int& line)
+{
     bool status = true;
     LexItem t = Parser::GetNextToken(in, line);
 
-    if( t.GetToken() == LPAREN ){
+    if( t.GetToken() == LPAREN )
+    {
         status = LogicExpr(in,line);
-        if(!status){
-            if (t.GetToken() == RPAREN){
-                status = ControlExpr(in, line);
+        if(!status)
+        {
+            if (t.GetToken() == RPAREN)
+            {
+                status = ControlStmt(in, line);
                 if(!status)
                     return status;
-            } else {
-                ParseError(line, "missing parentheses")
+            }
+            else if((t.GetToken() != RPAREN))
+            {
+                ParseError(line, "missing parentheses");
                 return false;
             }
 
         }
-    } else {
+    }
+    else if(t.GetToken() != LPAREN )
+    {
         ParseError(line, "missing parentheses");
         return false;
     }
+    return status;
 }
 
 bool IdentList(istream& in, int& line, LexItem tok){
@@ -307,7 +316,7 @@ bool AssignStmt(istream& in, int& line){
 bool ExprList(istream& in, int& line) {
 
 
-    bool status = Expr(in, line)
+    bool status = Expr(in, line);
 
     if (!status) {
         return status;
@@ -316,10 +325,9 @@ bool ExprList(istream& in, int& line) {
     if(t.GetToken() == COMMA){
         status = ExprList(in, line);
     } else{
-        Parser::PushBackToken(in,line);
+        Parser::PushBackToken(t);
     }
     return status;
-
 }
 
 /*
@@ -327,20 +335,21 @@ bool ExprList(istream& in, int& line) {
  */
 
 bool LogicExpr(istream& in, int& line){
-    bool status = Expre(in, line);
+    bool status = Expr(in, line);
     if(!status)
         return status;
 
-    LexItem t = Parser::GetNextToken();
+    LexItem t = Parser::GetNextToken(in, line);
 
     switch(t.GetToken()){
         case EQUAL: case GTHAN:
-            status = Expre(in, line);
+            status = Expr(in, line);
             if(!status)
                 return status;
-            break
+            break;
         default:
-            ParseError(line, "wrong conditional operator")
+            ParseError(line, "wrong conditional operator");
+            status = false;
     }
     return status;
 }
@@ -348,12 +357,14 @@ bool LogicExpr(istream& in, int& line){
  * Expr function is not finished
  */
 bool Expr(istream& in, int& line){
+
+    //check if the term is a string somehow
     bool status = Term(in, line);
 
     if (!status)
         return status;
 
-    LexItem t = Parse::GetNextToken();
+    LexItem t = Parser::GetNextToken(in, line);
 
     if (t.GetToken()== PLUS || t.GetToken()== PLUS) {
         status = Expr(in, line);
@@ -368,23 +379,12 @@ bool Expr(istream& in, int& line){
 
 bool Term(istream& in, int& line){
     bool status = SFactor(in,line);
+    if(!status)
+        return status;
 
     LexItem temp = Parser::GetNextToken(in,line);
-    if(temp.getToken() == MULT||temp.getToken() == DIV||temp.getToken() == REM) {
-        switch (temp.GetToken()) {
-            case MULT:
-                status = SFactor(in, line);
-                break;
-            case DIV:
-                status = SFactor(in, line);
-                break;
-            case REM:
-                status = SFactor(in, line);
-                break;
-            default:
-                ParseError(line, "theres no operator")
-                break;
-        }
+    if(temp.GetToken() == MULT||temp.GetToken() == DIV||temp.GetToken() == REM) {
+        status = SFactor(in, line);
     } else {
         Parser::PushBackToken(temp);
     }
@@ -396,10 +396,8 @@ bool SFactor(istream& in, int& line){
     bool status = true;
     LexItem temp = Parser::GetNextToken(in,line);
 
-    if(temp.GetToken()==PLUS){
+    if(temp.GetToken()==PLUS || temp.GetToken()==MINUS){
         status = Factor(in,line, 1);
-    } else if(temp.GetToken()==MINUS){
-        status = Factor(in,line, -1);
     } else {
         status = Factor(in,line, 1);
     }
@@ -418,22 +416,16 @@ bool Factor(istream& in, int& line, int sign){
     LexItem t = Parser::GetNextToken(in,line);
 
     switch (t.GetToken()){
-        case IDENT:
-            status =true;
-            break;
-        case ICONST:
-            status =true;
-            break;
-        case RCONST:
-            status =true;
-            break;
-        case SCONST:
+        case IDENT: case ICONST: case RCONST: case SCONST:
             status =true;
             break;
         case LPAREN:
             status = Expr(in, line);
+            if(!status)
+                return status;
             if(Parser::GetNextToken(in,line) != RPAREN){
                 ParseError(line, "missing paren");
+                return false;
             }
             status =true;
             break;
@@ -443,6 +435,3 @@ bool Factor(istream& in, int& line, int sign){
     }
     return status;
 }
-
-
-
