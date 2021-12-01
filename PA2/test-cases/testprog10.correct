@@ -1,0 +1,9 @@
+12: Unrecognized Input Pattern //in logicExpr function
+(<)
+12: Missing if statement Logic Expression //in ifstmt function
+12: Incorrect control Statement. //in control function
+12: Missing a semicolon.
+12: Incorrect Syntax in the Program
+Unsuccessful Parsing
+Number of Syntax Errors 5
+    

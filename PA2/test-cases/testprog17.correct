@@ -1,5 +1,5 @@
-16: Undeclared Variable
-16: Missing Left-Hand Side Variable in Assignment statement
+16: Undeclared Variable //this is in var function
+16: Missing Left-Hand Side Variable in Assignment statement //this is in uh assignstmt
 16: Incorrect control Statement.
 16: Missing a semicolon.
 16: Incorrect Syntax in the Program

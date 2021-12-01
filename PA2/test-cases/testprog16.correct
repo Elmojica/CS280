@@ -1,5 +1,5 @@
-12: Unrecognized input
-12: Missing operand after operator
+12: Unrecognized input //maybe in Factor function
+12: Missing operand after operator //in maybe expr
 12: Missing Expression in Assignment Statment
 12: Incorrect control Statement.
 12: Missing a semicolon.
