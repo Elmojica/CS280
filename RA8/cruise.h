@@ -12,7 +12,7 @@ class Cruise: public Ship
 	public:
 		Cruise(string name, int year, int max);
 				
-		int getmaxPassengers();
+		int getmaxPassengers( return maxPassengers; );
 			
 		void setmaxPassengers(int passengers);
 				

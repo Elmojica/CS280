@@ -11,12 +11,10 @@
 
 using namespace std;
      
-int main()
-{
+int main(){
     vector< Ship * > shipVector( 6 );
     ofstream cargofile ("cargo.dat"), cruisefile("cruise.dat");
-   if(!cargofile)
-    {
+   if(!cargofile){
         cout<< "File cannot be openned." << endl;
         return 0;
     }
