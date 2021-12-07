@@ -1,0 +1,11 @@
+PROGRAM circle
+  #Illegal remainder operand
+  INT r , b , a , p ;	
+  float x, y;
+  x = 2.5;
+  write "Testing remainder operator";
+  b = 5 * 3;
+  a = b % x;
+  #Display the results
+  write a, ", ", b ;
+END PROGRAM 

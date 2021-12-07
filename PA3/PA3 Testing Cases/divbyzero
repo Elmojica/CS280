@@ -1,0 +1,10 @@
+PROGRAM circle
+  #Testing divide by zero
+  INT r , b , a , p ;	
+  float x, y;
+  write "Testing divide by zero";
+  b = 5 * 3;
+  a = b /0;
+  #Display the results
+  write a, b ;
+END PROGRAM 

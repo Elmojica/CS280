@@ -17,17 +17,19 @@ class Ship {
 	public:
 		Ship(string name, int year): shipName{name}, shipYear{year}{
 			vesselType = "Ship";
+            shipYear = year;
+            shipName = name;
 		}
 		
-   string getShName() const{ return shipName; };
+   string getShName() const;
 
-   int getShYear() const{return shipYear; };
+   int getShYear() const;
 	
-	string getvesselType(){ return vesselType; }
+	string getvesselType();
 	
-	void setvesselType(string type){ vesselType = type; }
+	void setvesselType(string type);
    // return ship name
-   virtual void print() const ;     // output ship info
+   virtual void print() const;     // output ship info
 
 }; // end class Ship
 

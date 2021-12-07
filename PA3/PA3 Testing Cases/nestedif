@@ -1,0 +1,13 @@
+PROGRAM circle
+	#Clean program testing nested If statements
+	FLOAT r, b;
+	INT p, a; 	
+	r = 5.3;
+	b = 2;
+	a = 3 * r ;
+	IF ( r > 5)  
+		IF(b == 2) p = 2 * 3.14 * a ;
+	write "Testing mixed type expressions and assignments";
+	write "r = ", r, ", a = " , a, ", p = ", p;
+		
+END PROGRAM 

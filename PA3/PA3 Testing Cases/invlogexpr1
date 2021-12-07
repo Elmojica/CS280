@@ -1,0 +1,10 @@
+PROGRAM circle
+	#Invalid mixed type operands for acondition 
+	FLOAT r, a, p, b; 	
+	r = 5;
+	p = 3 + r;
+	a = (3.14) * r * r;
+	IF ( r > "Hello")  p = 2 * 3.14 * a ;
+	write "r = ", r, ", a = " , a, ", p = ", p;
+		
+END PROGRAM 
