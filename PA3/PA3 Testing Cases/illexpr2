@@ -1,0 +1,10 @@
+PROGRAM circle
+	#Illegal mixed type operands for addition
+	FLOAT r, a, p, b; 	
+	r = 5;
+	p = "Hello World!" + r;
+	a = (3.14) * r * r;
+	IF ( r > 5)  p = 2 * 3.14 * a ;
+	write "r = ", r, ", a = " , a, ", p = ", p;
+		
+END PROGRAM 

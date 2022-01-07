@@ -12,7 +12,7 @@ enum ValType { VINT, VREAL, VCHAR, VBOOL, VERR };
 
 class Value {
     ValType	T;
-     bool    Btemp;
+    bool    Btemp;
 	int		Itemp;
 	float   Rtemp;
     string	Stemp;
@@ -40,28 +40,23 @@ public:
     
     bool GetBool() const {if(IsBool()) return Btemp; throw "RUNTIME ERROR: Value not a boolean";}
     
-    void SetType(ValType type)
-    {
+    void SetType(ValType type){
     	T = type;
 	}
 	
-    void SetInt(int val)
-    {
+    void SetInt(int val){
     	Itemp = val;
 	}
 	
-	void SetReal(float val)
-    {
+	void SetReal(float val){
     	Rtemp = val;
 	}
 	
-	void SetChar(string val)
-    {
+	void SetChar(string val){
     	Stemp = val;
 	}
 	
-	void SetBool(bool val)
-    {
+	void SetBool(bool val){
     	Btemp = val;
 	}
 	

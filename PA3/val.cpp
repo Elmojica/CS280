@@ -1,9 +1,6 @@
 
 #include "val.h"
 
-
-
-
 // add this with op 
     Value Value::operator+(const Value& op) const {
         if( GetType() == op.GetType() )
